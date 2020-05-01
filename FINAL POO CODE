@@ -1,0 +1,115 @@
+program.cs
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ex2;
+
+
+namespace SpecificationManagemnet
+{
+    class Character
+    {
+        static void Main(string[] args)
+        {
+            SpecificationData db = new SpecificationData();
+
+
+            using (db)
+            {
+                Specification s1 = new Specification() { ID = 7, OS = "Windows", Location = "California" };
+                ComputerGame g1 = new ComputerGame() { ID = 1, Name = "Lego City", Type="Adventures", AgeID = 7, specification = s1, StudentImage = "GTAImage.png", DateOfRelease = new DateTime(2014 - 10 - 12) };
+                ComputerGame g2 = new ComputerGame() { ID = 2, Name = "Spiderman", Type = "Adventures", AgeID = 7, specification = s1, StudentImage = "GTAImage.png",DateOfRelease = new DateTime(2014 - 10 - 12) };
+
+
+                Specification s2 = new Specification() { ID = 18, OS = "Windows", Location = "California" };
+                ComputerGame g3 = new ComputerGame() { ID = 1, Name = "GTA", Type = "Adventures", AgeID = 18, specification = s2 ,StudentImage="GTAImage.png",DateOfRelease = new DateTime(2014 - 10 - 12) };
+                ComputerGame g4 = new ComputerGame() { ID = 2, Name = "Cyberpunk", Type = "Adventures", AgeID = 18, specification = s2, StudentImage = "GTAImage.png", DateOfRelease = new DateTime(2014-10-12) };
+
+                db.specifications.Add(s1);
+                db.specifications.Add(s2);
+
+                Console.WriteLine("Added specifications to database");
+
+                
+                db.Games.Add(g1);
+                db.Games.Add(g2);
+                db.Games.Add(g3);
+                db.Games.Add(g4);
+
+
+                Console.WriteLine("Added Games to database");
+
+                db.SaveChanges();
+
+                Console.WriteLine("Saved to database");
+
+
+
+            }
+        }
+    }
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+COMPUTERGAME.CS
+
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ex2
+{
+   public class ComputerGame
+    {
+        public int ID { get; set; }
+        public string Type { get; set; }
+        public string Name { get; set; }
+        public string StudentImage { get; set; }
+        public DateTime DateOfRelease { get; set; }
+    
+
+        public int AgeID { get; set; }
+        public virtual Specification specification { get; set; }
+
+
+    }
+
+    public class Specification
+    {
+        public int ID { get; set; }
+        public string OS { get; set; }
+        public string Location { get; set; }
+        public string Company { get; set; }
+        
+        
+
+
+        public virtual  List<ComputerGame>Games{ get; set; }
+
+
+
+    }
+
+    public class SpecificationData : DbContext
+    {
+
+        public SpecificationData() : base ("Game specifications") { }
+
+        public DbSet<ComputerGame> Games { get; set; }
+        public DbSet<Specification> specifications { get; set; } 
+
+    }
+
+
+
+
+
+}
